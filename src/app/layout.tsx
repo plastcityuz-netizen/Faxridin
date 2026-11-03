@@ -18,7 +18,7 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image", title: SITE_TITLE, description: SITE_DESCRIPTION, images: ["/images/og-image.jpg"] },
   robots: { index: true, follow: true },
 };
-export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#ee642a" };
+export const viewport: Viewport = { width: "device-width", initialScale: 1, themeColor: "#0b1f3a" };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   const organizationSchema = {

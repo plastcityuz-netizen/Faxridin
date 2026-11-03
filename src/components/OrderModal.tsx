@@ -137,9 +137,9 @@ export function OrderModal({ initialSelection, onClose }: OrderModalProps) {
       <div className={`form-field${name === "address" || name === "note" ? " form-field--wide" : ""}`}>
         <label htmlFor={id}>{label}{options.required ? <span className="required-mark"> *</span> : <span className="optional-mark"> (ixtiyoriy)</span>}</label>
         {name === "note" ? (
-          <textarea id={id} name={name} rows={3} placeholder={placeholder} maxLength={options.maxLength} value={customer[name]} disabled={sending} aria-invalid={Boolean(errors[name])} aria-describedby={`${id}-hint${errors[name] ? ` ${id}-error` : ""}`} onChange={(event) => updateCustomer(name, event.target.value)} />
+          <textarea id={id} name={name} rows={3} placeholder={placeholder} maxLength={options.maxLength} value={customer[name]} disabled={sending} aria-invalid={Boolean(errors[name])} aria-describedby={`${id}-hint`} onChange={(event) => updateCustomer(name, event.target.value)} />
         ) : (
-          <input id={id} name={name} type={options.type ?? "text"} autoComplete={options.autoComplete} placeholder={placeholder} required={options.required} maxLength={options.maxLength} value={customer[name]} disabled={sending} aria-invalid={Boolean(errors[name])} aria-describedby={`${id}-hint${errors[name] ? ` ${id}-error` : ""}`} onChange={(event) => updateCustomer(name, event.target.value)} onBlur={() => { if (name === "phone" && customer.phone.trim()) setCustomer((current) => ({ ...current, phone: formatPhone(current.phone) })); }} />
+          <input id={id} name={name} type={options.type ?? "text"} autoComplete={options.autoComplete} placeholder={placeholder} required={options.required} maxLength={options.maxLength} value={customer[name]} disabled={sending} aria-invalid={Boolean(errors[name])} aria-describedby={`${id}-hint`} onChange={(event) => updateCustomer(name, event.target.value)} onBlur={() => { if (name === "phone" && customer.phone.trim()) setCustomer((current) => ({ ...current, phone: formatPhone(current.phone) })); }} />
         )}
         <span id={`${id}-hint`} className={errors[name] ? "field-error" : "field-hint"}>{errors[name] ?? options.hint ?? ""}</span>
       </div>

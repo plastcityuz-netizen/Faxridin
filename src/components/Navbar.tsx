@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowUpRight, Menu, Send, X } from "lucide-react";
+import { ArrowUpRight, Menu, Phone, Send, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { NAVIGATION } from "@/lib/site";
 import { CONTACT } from "@/lib/validation";
@@ -16,7 +16,7 @@ export function Navbar() {
     const onScroll = () => setScrolled(window.scrollY > 16);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    const onResize = () => { if (window.innerWidth >= 1180) setOpen(false); };
+    const onResize = () => { if (window.innerWidth >= 1100) setOpen(false); };
     window.addEventListener("resize", onResize);
     return () => { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onResize); };
   }, []);
@@ -37,8 +37,11 @@ export function Navbar() {
     <>
       <div className="utility-bar">
         <div className="container utility-bar__inner">
-          <span><span className="status-dot" />Sifatli EPS penaplast ishlab chiqarish</span>
-          <a href={CONTACT.telegramUrl} target="_blank" rel="noopener noreferrer"><Send size={12} aria-hidden="true" />{CONTACT.telegram}<ArrowUpRight size={12} aria-hidden="true" /></a>
+          <span><span className="status-dot" /> O‘ZBEKISTONDA EPS PENAPLAST ISHLAB CHIQARISH</span>
+          <div className="utility-bar__contacts">
+            <a href={CONTACT.telegramUrl} target="_blank" rel="noopener noreferrer"><Send size={13} aria-hidden="true" /> {CONTACT.telegram}</a>
+            <a href={CONTACT.phoneHref}><Phone size={13} aria-hidden="true" /> {CONTACT.phoneDisplay}</a>
+          </div>
         </div>
       </div>
       <header ref={headerRef} className={`site-header${scrolled ? " site-header--scrolled" : ""}`}>
@@ -48,7 +51,7 @@ export function Navbar() {
             {NAVIGATION.map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
           </nav>
           <div className="navbar__actions">
-            <OrderButton className="navbar__cta" />
+            <OrderButton className="navbar__cta">Buyurtma berish</OrderButton>
             <button ref={toggleRef} type="button" className="menu-toggle icon-button" aria-label={open ? "Menyuni yopish" : "Menyuni ochish"} aria-expanded={open} aria-controls="mobile-navigation" onClick={() => setOpen(!open)}>
               {open ? <X size={24} /> : <Menu size={24} />}
             </button>
@@ -56,7 +59,7 @@ export function Navbar() {
         </div>
         <nav id="mobile-navigation" className="mobile-nav" aria-label="Mobil menyu" hidden={!open}>
           {NAVIGATION.map((item, index) => <a key={item.href} href={item.href} onClick={() => setOpen(false)}><span className="mobile-nav__number">0{index + 1}</span>{item.label}<ArrowUpRight size={17} aria-hidden="true" /></a>)}
-          <OrderButton className="mobile-nav__cta" />
+          <OrderButton className="mobile-nav__cta" onClick={() => { setOpen(false); toggleRef.current?.focus(); }}>Buyurtma berish</OrderButton>
         </nav>
       </header>
       {open && <button type="button" className="menu-backdrop" aria-label="Menyuni yopish" tabIndex={-1} onClick={() => setOpen(false)} />}

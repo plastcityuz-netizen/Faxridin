@@ -16,9 +16,8 @@ export function getSiteUrl(): URL {
 export const NAVIGATION = [
   { href: "#home", label: "Bosh sahifa" },
   { href: "#products", label: "Mahsulotlar" },
-  { href: "#production", label: "Ishlab chiqarish" },
-  { href: "#advantages", label: "Nega Penaplast" },
-  { href: "#applications", label: "Qayerda ishlatiladi" },
   { href: "#about", label: "Biz haqimizda" },
+  { href: "#production", label: "Ishlab chiqarish" },
+  { href: "#prices", label: "Narxlar" },
   { href: "#contact", label: "Aloqa" },
 ] as const;
