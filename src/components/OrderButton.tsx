@@ -11,11 +11,12 @@ interface OrderButtonProps {
   className?: string;
   variant?: "primary" | "dark" | "outline";
   disabled?: boolean;
+  onClick?: () => void;
 }
-export function OrderButton({ selection, children = "BUYURTMA BERISH", className = "", variant = "primary", disabled = false }: OrderButtonProps) {
+export function OrderButton({ selection, children = "BUYURTMA BERISH", className = "", variant = "primary", disabled = false, onClick }: OrderButtonProps) {
   const { openOrder } = useOrder();
   return (
-    <button type="button" className={`button button--${variant} ${className}`} onClick={() => openOrder(selection)} disabled={disabled}>
+    <button type="button" className={`button button--${variant} ${className}`} onClick={() => { onClick?.(); openOrder(selection); }} disabled={disabled}>
       <span>{children}</span><ArrowUpRight size={18} aria-hidden="true" />
     </button>
   );

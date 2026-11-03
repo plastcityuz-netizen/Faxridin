@@ -1,33 +1,31 @@
 import Image from "next/image";
-import { ArrowDown, Layers3 } from "lucide-react";
+import { ArrowDown, ArrowRight, Layers3 } from "lucide-react";
 import { OrderButton } from "./OrderButton";
 
 export function Hero() {
   return (
     <section id="home" className="hero" aria-labelledby="hero-title">
-      <div className="container hero__grid">
+      <Image src="/images/hero-industrial.jpg" alt="EPS penaplast plitalari taxlangan zamonaviy ishlab chiqarish muhiti — illustrativ vizual" fill priority sizes="100vw" quality={85} className="hero__image" />
+      <div className="hero__shade" />
+      <div className="container hero__inner">
         <div className="hero__content">
-          <p className="eyebrow"><span />IZO PLUS — PENAPLAST ZAVODI</p>
-          <h1 id="hero-title">SIFATLI<br /><span>PENAPLAST.</span><br />ISHONCHLI<br />QURILISH.</h1>
-          <p className="hero__description">Qurilish, issiqlik izolyatsiyasi va sanoat uchun sifatli EPS penaplast mahsulotlari.</p>
+          <p className="hero__eyebrow"><span /> ISHLAB CHIQARUVCHIDAN BEVOSITA <b> / 01</b></p>
+          <h1 id="hero-title">Sifatli penaplast.<br /><span>Ishonchli qurilish<span className="hero__dot">.</span></span></h1>
+          <p className="hero__description">Qurilish va issiqlik izolyatsiyasi uchun puxta yechim. Loyihangizga mos penaplastni biz bilan tanlang.</p>
           <div className="hero__actions">
-            <a className="button button--primary" href="#products">MAHSULOTLARNI KO‘RISH<ArrowDown size={18} aria-hidden="true" /></a>
-            <OrderButton variant="outline" />
+            <OrderButton>Narx so‘rash</OrderButton>
+            <a className="button button--hero-outline" href="#products">Katalogni ko‘rish <ArrowRight size={19} aria-hidden="true" /></a>
           </div>
-          <div className="hero__assurance"><span className="assurance-line" /><p>Kerakli zichlik. Kerakli qalinlik.<br /><strong>To‘g‘ri tanlov — oson buyurtma.</strong></p></div>
         </div>
-        <div className="hero__visual">
-          <Image src="/images/hero-eps.jpg" alt="Zamonaviy EPS ishlab chiqarish sexi va taxlangan oq penaplast plitalari — illustrativ zavod vizuali" fill priority sizes="(min-width: 1024px) 53vw, 100vw" quality={85} className="hero__image" />
-          <div className="hero__image-top"><span className="image-label"><span />EPS / IZO PLUS</span></div>
-          <div className="hero__spec-card"><span className="hero__spec-icon"><Layers3 size={29} strokeWidth={1.5} aria-hidden="true" /></span><div><strong>7–20 <span>kg/m³</span></strong><p>Turli vazifalar uchun zichlik</p></div><span className="hero__spec-number">01—03</span></div>
-          <span className="hero__image-caption">MATERIALDAN MUSTAHKAM YECHIMGACHA</span>
+        <div className="hero__floating" aria-hidden="true"><span className="hero__floating-icon"><Layers3 size={22} /></span><span><small>MATERIAL</small><strong>EPS PENAPLAST</strong></span><span className="hero__floating-number">01 / 03</span></div>
+        <div className="hero__bottom">
+          <div className="hero__facts" aria-label="Mahsulot ko‘rsatkichlari">
+            <div><span>01</span><p><strong>7–20 <small>kg/m³</small></strong><em>Zichlik variantlari</em></p></div>
+            <div><span>02</span><p><strong>1–60 <small>cm</small></strong><em>Qalinlik variantlari</em></p></div>
+            <div><span>03</span><p><strong>3 <small>xil</small></strong><em>Mahsulot turi</em></p></div>
+          </div>
+          <a href="#advantages" className="hero__scroll"><span>PASTGA<br />AYLANTIRING</span><ArrowDown size={18} aria-hidden="true" /></a>
         </div>
-      </div>
-      <div className="container hero__facts" aria-label="Asosiy ko‘rsatkichlar">
-        <div><span>01</span><p><strong>3 xil mahsulot</strong><small>Bir nechta vazifa — bitta zavod</small></p></div>
-        <div><span>02</span><p><strong>1–60 cm qalinlik</strong><small>Loyihangizga mos tanlov</small></p></div>
-        <div><span>03</span><p><strong>Oson buyurtma</strong><small>Telegram orqali bevosita aloqa</small></p></div>
-        <a href="#products" className="hero__scroll" aria-label="Mahsulotlarga o‘tish"><ArrowDown size={21} /></a>
       </div>
     </section>
   );

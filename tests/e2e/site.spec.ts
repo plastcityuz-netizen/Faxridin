@@ -24,6 +24,14 @@ async function home(page: Page) {
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await page.evaluate(async () => { await document.fonts.ready; });
 }
+async function openProduct(page: Page, id: string) {
+  const card = page.getByTestId(`product-${id}`);
+  const details = card.getByRole("button", { name: "Batafsil" });
+  await expect(details).toHaveAttribute("aria-expanded", "false");
+  await details.click();
+  await expect(card.getByRole("button", { name: "Yopish" })).toHaveAttribute("aria-expanded", "true");
+  return card;
+}
 async function fillCustomer(page: Page) {
   const dialog = page.getByRole("dialog");
   await dialog.getByLabel("Ismingiz").fill("Ali");
@@ -57,7 +65,7 @@ test("home, exact catalog, SEO and excluded functionality", async ({ page }) => 
 for (const productId of ["white", "black"] as const) {
   test(`${productId}: every density, every thickness and live volume pricing`, async ({ page }) => {
     await home(page);
-    const card = page.getByTestId(`product-${productId}`);
+    const card = await openProduct(page, productId);
     await card.scrollIntoViewIfNeeded();
     await expect(card.getByRole("radio")).toHaveCount(19);
     for (const [density, price] of prices) {
@@ -89,7 +97,7 @@ for (const productId of ["white", "black"] as const) {
 
 test("granules: presets, exact kilogram totals and integer validation", async ({ page }) => {
   await home(page);
-  const card = page.getByTestId("product-granules");
+  const card = await openProduct(page, "granules");
   await card.scrollIntoViewIfNeeded();
   for (const kg of [10, 50, 100]) {
     await card.getByRole("button", { name: `${kg} kg`, exact: true }).click();
@@ -107,7 +115,7 @@ test("granules: presets, exact kilogram totals and integer validation", async ({
 
 test("white order: required fields, phone validation, exact payload, success and focus restore", async ({ page }) => {
   await home(page);
-  const card = page.getByTestId("product-white");
+  const card = await openProduct(page, "white");
   await card.getByTestId("density-white-15").click();
   await card.getByTestId("thickness-white-10").click();
   await card.getByTestId("quantity-white").fill("20");
@@ -141,7 +149,7 @@ test("white order: required fields, phone validation, exact payload, success and
 
 test("black order: honest Telegram fallback, copy action and real contact link", async ({ page, context }) => {
   await home(page);
-  const card = page.getByTestId("product-black");
+  const card = await openProduct(page, "black");
   await card.getByTestId("density-black-20").click();
   await card.getByTestId("thickness-black-60").click();
   await card.getByTestId("quantity-black").fill("2.5");
@@ -164,7 +172,7 @@ test("black order: honest Telegram fallback, copy action and real contact link",
 
 test("granules order: no sheet dimensions in the submitted order", async ({ page }) => {
   await home(page);
-  const card = page.getByTestId("product-granules");
+  const card = await openProduct(page, "granules");
   await card.getByRole("button", { name: "100 kg", exact: true }).click();
   await card.getByRole("button", { name: "BUYURTMA BERISH" }).click();
   await fillCustomer(page);
@@ -178,7 +186,7 @@ test("granules order: no sheet dimensions in the submitted order", async ({ page
 
 test("general CTA allows product selection and all specifications", async ({ page }) => {
   await home(page);
-  await page.locator(".hero").getByRole("button", { name: "BUYURTMA BERISH" }).click();
+  await page.locator(".hero").getByRole("button", { name: "Narx so‘rash" }).click();
   const dialog = page.getByRole("dialog");
   await expect(dialog.getByRole("radio", { name: "Oq penaplast", exact: true })).toBeChecked();
   await dialog.getByRole("radio", { name: "Qora penaplast", exact: true }).check({ force: true });
@@ -200,7 +208,8 @@ test("general CTA allows product selection and all specifications", async ({ pag
 
 test("order loading, error and retry preserve input and request identity", async ({ page }) => {
   await home(page);
-  await page.getByTestId("product-white").getByRole("button", { name: "BUYURTMA BERISH" }).click();
+  const card = await openProduct(page, "white");
+  await card.getByRole("button", { name: "BUYURTMA BERISH" }).click();
   await fillCustomer(page);
   let calls = 0;
   const ids: string[] = [];
@@ -224,7 +233,7 @@ test("order loading, error and retry preserve input and request identity", async
 
 test("all navigation anchors work on desktop and in the mobile disclosure", async ({ page }, testInfo) => {
   await home(page);
-  const links = [["#home", "Bosh sahifa"], ["#products", "Mahsulotlar"], ["#production", "Ishlab chiqarish"], ["#advantages", "Nega Penaplast"], ["#applications", "Qayerda ishlatiladi"], ["#about", "Biz haqimizda"], ["#contact", "Aloqa"]];
+  const links = [["#home", "Bosh sahifa"], ["#products", "Mahsulotlar"], ["#about", "Biz haqimizda"], ["#production", "Ishlab chiqarish"], ["#prices", "Narxlar"], ["#contact", "Aloqa"]];
   const mobile = testInfo.project.name === "mobile";
   for (const [href, label] of links) {
     if (mobile) {
@@ -237,7 +246,7 @@ test("all navigation anchors work on desktop and in the mobile disclosure", asyn
     await expect(page.locator(href!)).toBeAttached();
   }
   await expect(page.locator(".site-header")).toBeInViewport();
-  expect(await page.locator('.footer__nav a[href^="#"]').count()).toBe(7);
+  expect(await page.locator('.footer__nav a[href^="#"]').count()).toBe(8);
   await expect(page.locator('.contact-channel[href="tel:+998995132222"]')).toHaveCount(1);
 });
 
@@ -247,7 +256,7 @@ test("responsive layouts have no horizontal overflow and all images load", async
     await home(page);
     const dimensions = await page.evaluate(() => ({ viewport: innerWidth, content: document.documentElement.scrollWidth }));
     expect(dimensions.content, `No overflow at ${width}px`).toBeLessThanOrEqual(dimensions.viewport);
-    await page.locator(".hero").getByRole("button", { name: "BUYURTMA BERISH" }).click();
+    await page.locator(".hero").getByRole("button", { name: "Narx so‘rash" }).click();
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible();
     const box = await dialog.boundingBox();
@@ -279,7 +288,12 @@ test("mobile menu closes with Escape and the order dialog traps focus", async ({
   await page.keyboard.press("Escape");
   await expect(page.locator("#mobile-navigation")).toBeHidden();
   await expect(toggle).toBeFocused();
-  await page.locator(".hero").getByRole("button", { name: "BUYURTMA BERISH" }).click();
+  await toggle.click();
+  await page.locator("#mobile-navigation").getByRole("button", { name: "Buyurtma berish" }).click();
+  await expect(page.locator("#mobile-navigation")).toBeHidden();
+  await page.getByRole("dialog").getByRole("button", { name: "Buyurtma oynasini yopish" }).click();
+  await expect(toggle).toBeFocused();
+  await page.locator(".hero").getByRole("button", { name: "Narx so‘rash" }).click();
   const dialog = page.getByRole("dialog");
   for (let i = 0; i < 22; i += 1) {
     await page.keyboard.press("Tab");
@@ -287,6 +301,114 @@ test("mobile menu closes with Escape and the order dialog traps focus", async ({
   }
   await page.keyboard.press("Escape");
   await expect(dialog).toHaveCount(0);
+});
+
+test("product details disclosure retains the chosen specification", async ({ page }) => {
+  await home(page);
+  const card = await openProduct(page, "white");
+  await card.getByTestId("density-white-20").click();
+  await card.getByTestId("quantity-white").fill("2");
+  await expect(card.getByTestId("total-white")).toHaveText("$174.00");
+  await card.getByRole("button", { name: "Yopish" }).click();
+  await expect(card.getByTestId("quantity-white")).toBeHidden();
+  await card.getByRole("button", { name: "Batafsil" }).click();
+  await expect(card.getByTestId("density-white-20").getByRole("radio")).toBeChecked();
+  await expect(card.getByTestId("quantity-white")).toHaveValue("2");
+});
+
+test("both forms connect to the unconfigured API and offer manual delivery", async ({ page }) => {
+  await page.setExtraHTTPHeaders({ "x-forwarded-for": "198.51.100.31" });
+  await home(page);
+  await page.locator(".hero").getByRole("button", { name: "Narx so‘rash" }).click();
+  await fillCustomer(page);
+  const dialog = page.getByRole("dialog");
+  await dialog.getByRole("button", { name: "BUYURTMANI YUBORISH" }).click();
+  await expect(dialog.getByRole("heading", { name: "Buyurtmangiz Telegramga tayyor" })).toBeVisible();
+  await expect(dialog.getByLabel("Telegramga yuboriladigan buyurtma matni")).toContainText("Mahsulot: Oq penaplast");
+  await dialog.getByRole("button", { name: "Buyurtma oynasini yopish" }).click();
+  const form = page.locator(".contact-form");
+  await form.getByLabel("Ismingiz").fill("Ali");
+  await form.getByLabel("Telefon raqamingiz").fill("901234567");
+  await form.getByLabel("Xabaringiz").fill("Mahsulot haqida savolim bor.");
+  await form.getByRole("button", { name: "Xabarni yuborish" }).click();
+  const result = page.locator(".contact-result");
+  await expect(result.getByRole("heading", { name: "Xabaringiz Telegramga tayyor" })).toBeVisible();
+  await expect(result.getByLabel("Telegramga yuboriladigan murojaat matni")).toHaveValue(/Mahsulot haqida savolim bor/);
+  await expect(result.getByText("Hali yuborilmadi.", { exact: true })).toBeVisible();
+});
+
+test("contact form validates and sends an inquiry without creating a product order", async ({ page }) => {
+  await home(page);
+  const form = page.locator(".contact-form");
+  await form.getByRole("button", { name: "Xabarni yuborish" }).click();
+  for (const label of ["Ismingiz", "Telefon raqamingiz", "Xabaringiz"]) await expect(form.getByLabel(label)).toHaveAttribute("aria-invalid", "true");
+  await form.getByLabel("Ismingiz").fill("Ali");
+  await form.getByLabel("Telefon raqamingiz").fill("123");
+  await form.getByLabel("Xabaringiz").fill("Mahsulot haqida ma’lumot bering.");
+  await form.getByRole("button", { name: "Xabarni yuborish" }).click();
+  await expect(form.getByLabel("Telefon raqamingiz")).toHaveAttribute("aria-invalid", "true");
+  await form.getByLabel("Telefon raqamingiz").fill("90 123 45 67");
+  await page.route("**/api/contact", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ status: "sent", reference: "IZO-A1B2C3D4", message: "Xabaringiz yuborildi!" }) }));
+  const requestPromise = page.waitForRequest((request) => request.url().endsWith("/api/contact") && request.method() === "POST");
+  await form.getByRole("button", { name: "Xabarni yuborish" }).click();
+  const payload = (await requestPromise).postDataJSON();
+  expect(payload.name).toBe("Ali");
+  expect(payload.phone).toBe("+998 90 123 45 67");
+  expect(payload.message).toBe("Mahsulot haqida ma’lumot bering.");
+  expect(payload).not.toHaveProperty("selection");
+  await expect(page.getByRole("heading", { name: "Xabaringiz yuborildi!" })).toBeVisible();
+  await page.getByRole("button", { name: "Yana xabar yozish" }).click();
+  await expect(page.locator(".contact-form").getByLabel("Ismingiz")).toHaveValue("");
+});
+
+test("contact submission retries retain input and request identity", async ({ page }) => {
+  await home(page);
+  const form = page.locator(".contact-form");
+  await form.getByLabel("Ismingiz").fill("Ali");
+  await form.getByLabel("Telefon raqamingiz").fill("901234567");
+  await form.getByLabel("Xabaringiz").fill("Narx haqida savolim bor.");
+  let calls = 0;
+  const ids: string[] = [];
+  await page.route("**/api/contact", async (route) => {
+    calls += 1;
+    ids.push(route.request().postDataJSON().requestId);
+    await new Promise((resolve) => setTimeout(resolve, 300));
+    await route.fulfill({ status: calls === 1 ? 502 : 200, contentType: "application/json", body: JSON.stringify(calls === 1 ? { status: "error", message: "provider details" } : { status: "sent", reference: "IZO-RETRY", message: "Success" }) });
+  });
+  await form.getByRole("button", { name: "Xabarni yuborish" }).click();
+  await expect(form.getByRole("button", { name: "Yuborilmoqda..." })).toBeDisabled();
+  await expect(form.getByRole("alert")).toHaveText("Xabar yuborilmadi. Qaytadan urinib ko‘ring.");
+  await expect(form.getByLabel("Xabaringiz")).toHaveValue("Narx haqida savolim bor.");
+  await form.getByRole("button", { name: "Xabarni yuborish" }).click();
+  await expect(page.getByRole("heading", { name: "Xabaringiz yuborildi!" })).toBeVisible();
+  expect(calls).toBe(2);
+  expect(ids[0]).toBe(ids[1]);
+});
+
+test("contact fallback clearly requires manual Telegram delivery", async ({ page, context }) => {
+  await home(page);
+  const form = page.locator(".contact-form");
+  await form.getByLabel("Ismingiz").fill("Ali");
+  await form.getByLabel("Telefon raqamingiz").fill("901234567");
+  await form.getByLabel("Xabaringiz").fill("Narx haqida savolim bor.");
+  const text = "YANGI MUROJAAT\nIsm: Ali\nTelefon: +998 90 123 45 67\nXabar: Narx haqida savolim bor.";
+  await page.route("**/api/contact", (route) => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ status: "manual", reference: "IZO-A1B2C3D4", telegramText: text, telegramUrl: "https://t.me/penaplast_uz", message: "Murojaat matni tayyor." }) }));
+  await form.getByRole("button", { name: "Xabarni yuborish" }).click();
+  const result = page.locator(".contact-result");
+  await expect(result.getByText("Hali yuborilmadi.", { exact: true })).toBeVisible();
+  await expect(result.getByRole("link", { name: "Telegramni ochish" })).toHaveAttribute("href", "https://t.me/penaplast_uz");
+  await context.grantPermissions(["clipboard-read", "clipboard-write"]);
+  await result.getByRole("button", { name: "Matnni nusxalash" }).click();
+  await expect(result.getByRole("button", { name: "Nusxalandi" })).toBeVisible();
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe(text);
+});
+
+test("catalog counts remain readable with reduced motion", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await home(page);
+  const stats = page.locator(".stats-section");
+  await stats.scrollIntoViewIfNeeded();
+  await expect(stats.locator("[data-count]")).toHaveText(["3", "8", "11", "6"]);
 });
 
 test.describe("server API (isolated, never sends a real Telegram message)", () => {
@@ -319,6 +441,26 @@ test.describe("server API (isolated, never sends a real Telegram message)", () =
     expect((await request.post("/api/order", { data: "{bad", headers: { "Content-Type": "application/json" } })).status()).toBe(400);
     expect((await request.post("/api/order", { data: { ...validPayload(), extra: "x".repeat(20_000) } })).status()).toBe(400);
     expect((await request.get("/api/order")).status()).toBe(405);
+  });
+
+  test("contact API validates input, returns an honest fallback and rate limits", async ({ request }) => {
+    const contact = { name: "Ali", phone: "+998 90 123 45 67", message: "Narxni bilmoqchiman", requestId };
+    const headers = { "x-forwarded-for": "198.51.100.21" };
+    const response = await request.post("/api/contact", { data: contact, headers });
+    expect(response.status()).toBe(200);
+    const body = await response.json();
+    expect(body.status).toBe("manual");
+    expect(body.telegramUrl).toBe("https://t.me/penaplast_uz");
+    expect(body.telegramText).toContain("Narxni bilmoqchiman");
+    expect((await request.post("/api/contact", { data: { ...contact, phone: "123" }, headers })).status()).toBe(400);
+    expect((await request.post("/api/contact", { data: { ...contact, message: "" }, headers })).status()).toBe(400);
+    expect((await request.post("/api/contact", { data: contact, headers: { ...headers, Origin: "https://untrusted.example" } })).status()).toBe(403);
+    expect((await request.post("/api/contact", { data: "bad", headers: { "Content-Type": "text/plain" } })).status()).toBe(415);
+    expect((await request.post("/api/contact", { data: { ...contact, extra: "x".repeat(20_000) }, headers })).status()).toBe(400);
+    for (let i = 0; i < 4; i += 1) expect((await request.post("/api/contact", { data: contact, headers })).status()).toBe(200);
+    const limited = await request.post("/api/contact", { data: contact, headers });
+    expect(limited.status()).toBe(429);
+    expect(Number(limited.headers()["retry-after"])).toBeGreaterThan(0);
   });
 
   test("rate limits repeated valid requests", async ({ request }) => {

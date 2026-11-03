@@ -22,6 +22,15 @@ export async function sendTelegramOrder(
   config: TelegramConfig,
   fetchImpl: typeof fetch = fetch,
 ): Promise<void> {
+  return sendTelegramMessage(formatTelegramHtml(order), config, fetchImpl);
+}
+
+/** Send already-escaped Telegram HTML from the server only. */
+export async function sendTelegramMessage(
+  text: string,
+  config: TelegramConfig,
+  fetchImpl: typeof fetch = fetch,
+): Promise<void> {
   let response: Response;
   try {
     response = await fetchImpl(`https://api.telegram.org/bot${config.botToken}/sendMessage`, {
@@ -29,7 +38,7 @@ export async function sendTelegramOrder(
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         chat_id: config.chatId,
-        text: formatTelegramHtml(order),
+        text,
         parse_mode: "HTML",
         link_preview_options: { is_disabled: true },
       }),

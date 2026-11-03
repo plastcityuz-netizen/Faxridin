@@ -1,10 +1,10 @@
-import { BadgeCheck, Boxes, Factory, Layers3, Package, PackageCheck, Ruler, Scissors, Send, ShieldCheck, Thermometer, Waves } from "lucide-react";
+import { BadgeCheck, Boxes, CircleDollarSign, Factory, Feather, Layers3, Package, PackageCheck, Ruler, Scissors, Send, ShieldCheck, Thermometer, Truck, Waves } from "lucide-react";
 import type { ContentIcon as IconName } from "@/lib/content";
 
 const icons = {
   quality: ShieldCheck, density: Layers3, thickness: Ruler, thermal: Thermometer,
   factory: Factory, order: Send, raw: Boxes, expand: Waves, mold: Package,
-  cut: Scissors, check: BadgeCheck, package: PackageCheck,
+  cut: Scissors, check: BadgeCheck, package: PackageCheck, light: Feather, price: CircleDollarSign, delivery: Truck,
 };
 export function ContentIcon({ name, size = 25 }: { name: IconName; size?: number }) {
   const Icon = icons[name];

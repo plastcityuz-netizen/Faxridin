@@ -1,4 +1,4 @@
-export type ContentIcon = "quality" | "density" | "thickness" | "thermal" | "factory" | "order" | "raw" | "expand" | "mold" | "cut" | "check" | "package";
+export type ContentIcon = "quality" | "density" | "thickness" | "thermal" | "factory" | "order" | "raw" | "expand" | "mold" | "cut" | "check" | "package" | "light" | "price" | "delivery";
 
 export const PRODUCTION_STEPS: { number: string; title: string; description: string; icon: ContentIcon }[] = [
   { number: "01", title: "Xomashyo", description: "EPS granulalari tayyorlanadi va ishlab chiqarishga uzatiladi.", icon: "raw" },
@@ -10,12 +10,12 @@ export const PRODUCTION_STEPS: { number: string; title: string; description: str
 ];
 
 export const ADVANTAGES: { number: string; title: string; description: string; icon: ContentIcon }[] = [
-  { number: "01", title: "Yuqori sifat", description: "Qurilish talablariga mos, puxta ishlangan EPS mahsulotlari.", icon: "quality" },
-  { number: "02", title: "Aniq zichlik", description: "7–20 kg/m³ oralig‘ida loyihangizga mos zichlikni tanlang.", icon: "density" },
-  { number: "03", title: "Turli qalinlik", description: "1 dan 60 cm gacha — vazifangizga kerakli o‘lchamda.", icon: "thickness" },
-  { number: "04", title: "Issiqlik izolyatsiyasi", description: "Binoda issiqlikni saqlashga ko‘maklashadigan yengil material.", icon: "thermal" },
-  { number: "05", title: "Ishonchli ishlab chiqarish", description: "Xomashyodan tayyor mahsulotgacha izchil ishlab chiqarish jarayoni.", icon: "factory" },
-  { number: "06", title: "Tezkor buyurtma", description: "Tanlang, miqdorni kiriting va buyurtmani Telegram orqali yuboring.", icon: "order" },
+  { number: "01", title: "Sifatga e’tibor", description: "Qurilish ishlari uchun puxta tayyorlangan EPS mahsulotlari.", icon: "quality" },
+  { number: "02", title: "Issiqlik izolyatsiyasi", description: "Binoda issiqlikni saqlashga ko‘maklashadigan material.", icon: "thermal" },
+  { number: "03", title: "Yengil va qulay", description: "Yengil tuzilma bilan tashish va ishlov berish qulayligi.", icon: "light" },
+  { number: "04", title: "Keng tanlov", description: "7–20 kg/m³ zichlik va 1–60 cm qalinlik variantlari.", icon: "thickness" },
+  { number: "05", title: "Ochiq narx hisobi", description: "Miqdor va zichlikni tanlab, taxminiy narxni darhol ko‘ring.", icon: "price" },
+  { number: "06", title: "Qulay buyurtma", description: "Buyurtma va yetkazib berish shartlarini operator bilan kelishing.", icon: "delivery" },
 ];
 
 export const APPLICATIONS = [
